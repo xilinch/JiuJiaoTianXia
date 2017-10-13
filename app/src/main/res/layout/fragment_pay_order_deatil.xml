@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/re_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff">
+
+
+
+    <!--=================================付款方式======================================-->
+    <LinearLayout
+        android:id="@+id/lin_pay_way"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#ffffff"
+          >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="付款方式"
+                android:textSize="18sp"
+                android:textColor="#171717"
+                />
+
+            <ImageView
+                android:id="@+id/image_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/ai2"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#eeeeee"></RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_pay_zfb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="#ffffff"
+                    android:gravity="center_vertical"
+                    android:padding="8dp"
+                    android:drawableLeft="@drawable/icon48_app_zfbpay_logo"
+                    android:drawablePadding="10dp"
+                    android:text="支付宝支付" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#eeeeee"></RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_pay_wx"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="#ffffff"
+                    android:gravity="center_vertical"
+                    android:padding="8dp"
+                    android:drawableLeft="@drawable/icon48_app_wxpay_logo"
+                    android:drawablePadding="10dp"
+                    android:text="微信支付"
+                    android:visibility="gone"
+                    />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#eeeeee"
+                    android:visibility="gone"
+                    ></RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_pay_unionpay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="#ffffff"
+                    android:gravity="center_vertical"
+                    android:padding="8dp"
+                    android:drawableLeft="@drawable/icon48_app_unionpay_logo"
+                    android:drawablePadding="10dp"
+                    android:text="银联支付"
+                    android:visibility="gone"
+                    />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#eeeeee"
+                    android:visibility="gone"
+                    ></RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
