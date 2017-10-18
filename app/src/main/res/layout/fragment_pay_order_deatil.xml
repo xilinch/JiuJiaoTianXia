@@ -75,13 +75,13 @@
                     android:drawableLeft="@drawable/icon48_app_wxpay_logo"
                     android:drawablePadding="10dp"
                     android:text="微信支付"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     />
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#eeeeee"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     ></RelativeLayout>
 
                 <TextView
