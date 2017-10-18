@@ -14,7 +14,9 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.tangsoft.xkr.jiujiaotianxia.api.ApiConfig;
+import com.tangsoft.xkr.jiujiaotianxia.dialog.ShareDialog;
 import com.tangsoft.xkr.jiujiaotianxia.fragment.PayOrderDetailFragment;
+import com.tangsoft.xkr.jiujiaotianxia.model.ShareInfo;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.webView)
     WebView webView;
+
+    private ShareDialog mShareDialog;
 
     private String FIRST_URL = ApiConfig.getHost() ;
     private String SUCCESS_URL = ApiConfig.getHost()+"/WebChat/Api/ReChargeSuccess.aspx";
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         webView.addJavascriptInterface(this, "appContainer");
 
         webView.loadUrl(FIRST_URL);
+        mShareDialog = new ShareDialog(this);
     }
 
 
@@ -69,11 +74,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @JavascriptInterface
-    public void addProductToCart(String memberCode,String productCode,String productName,String url,String image){
+    public void addProductToCart(final String memberCode,final String productCode,final String productName,final String url,final String image){
         //分享
-        Log.e("my", "share: memberCode" + memberCode + " productCode:" + productCode + " productName:" + productName + " url:" + url + " image:" + image);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e("my", "share: memberCode" + memberCode + " productCode:" + productCode + " productName:" + productName + " url:" + url + " image:" + image);
+                ShareInfo shareInfo =  new ShareInfo();
+                shareInfo.setImgUrl(ApiConfig.getHost() + image);
+                shareInfo.setTitle("邀请有礼！" + productName);
+                shareInfo.setSpreadContent("您的好友"+ "为您送来TA的专属邀请，赶快点击查看惊喜吧～");
+                shareInfo.setSpreadUrl(ApiConfig.getHost() + url);
+                showNativeShareDialog(shareInfo);
+            }
+        });
 
     }
+
+    private void showNativeShareDialog(ShareInfo shareInfo){
+        if(mShareDialog != null && !mShareDialog.isShowing()){
+            mShareDialog.setShareInfo(shareInfo);
+            mShareDialog.show();
+        }
+
+    }
+
 
     public void loadPayResult(){
         runOnUiThread(new Runnable() {

@@ -35,6 +35,7 @@ import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -144,7 +145,7 @@ public class UtilShare {
 	protected void shareToWx(final boolean isWxFriend) {
 
 		/** 微信通信API接口 */
-		//final IWXAPI wxApi = WXAPIFactory.createWXAPI(activity, "wx8f35bb5ee2f656e9");
+		mWxAPI = WXAPIFactory.createWXAPI(activity, WXPayEntryActivity.WX_APPID);
 
 		if (mWxAPI.isWXAppInstalled()) {
 			WXWebpageObject webPage = new WXWebpageObject();
