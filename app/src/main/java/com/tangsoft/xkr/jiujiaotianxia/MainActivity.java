@@ -68,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
         payDetailFragment.show(fm,"payDetail");
     }
 
+    @JavascriptInterface
+    public void addProductToCart(String memberCode,String productCode,String productName,String url,String image){
+        //分享
+        Log.e("my", "share: memberCode" + memberCode + " productCode:" + productCode + " productName:" + productName + " url:" + url + " image:" + image);
+
+    }
+
     public void loadPayResult(){
         runOnUiThread(new Runnable() {
             @Override
