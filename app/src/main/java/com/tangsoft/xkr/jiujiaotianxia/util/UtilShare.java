@@ -61,6 +61,7 @@ public class UtilShare {
 	protected String showUrl;// 跳转链接
 	protected String shareTitle;// 图片标题
 	protected String picUrl;// 图片地址
+	private static ImageLoader imageLoader;
 
 	public static String WEIXIN = "weixin";
 	public static String QQ = "qq";
@@ -94,7 +95,7 @@ public class UtilShare {
 		this.shareContent = info.getSpreadContent();
 		this.showUrl = info.getSpreadUrl();
 		this.shareTitle = info.getTitle();
-
+		getImageloader(activity);
 		if (WEIXIN.equals(type))
 			shareToWx(false);
 		else if (QQ.equals(type))
@@ -165,7 +166,7 @@ public class UtilShare {
 			msg.description = isWxFriend ?  shareTitle :shareContent;
 			Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(),R.mipmap.ic_launcher);
 			sendShare(bitmap,isWxFriend,msg,mWxAPI, Bitmap.CompressFormat.JPEG);
-			getImageloader(activity).loadImage(picUrl, new ImageLoadingListener() {
+			imageLoader.loadImage(picUrl, new ImageLoadingListener() {
 				@Override
 				public void onLoadingStarted(String s, View view) {
 				}
@@ -246,7 +247,7 @@ public class UtilShare {
 	 * 下载图片  分享到新浪微博
 	 */
 	public void shareWeiBo(){
-		getImageloader(activity).loadImage(picUrl, new ImageLoadingListener() {
+		imageLoader.loadImage(picUrl, new ImageLoadingListener() {
 			@Override
 			public void onLoadingStarted(String s, View view) {
 			}
@@ -397,7 +398,8 @@ public class UtilShare {
 						.writeDebugLogs() // Remove for release app
 
 						.build());// 开始构建
-		return ImageLoader.getInstance();
+		imageLoader = ImageLoader.getInstance();
+		return imageLoader;
 	}
 
 

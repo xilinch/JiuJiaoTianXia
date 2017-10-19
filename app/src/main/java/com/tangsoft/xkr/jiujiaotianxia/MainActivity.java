@@ -79,12 +79,13 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.e("my", "share: memberCode" + memberCode + " productCode:" + productCode + " productName:" + productName + " url:" + url + " image:" + image);
                 ShareInfo shareInfo =  new ShareInfo();
                 shareInfo.setImgUrl(ApiConfig.getHost() + image);
                 shareInfo.setTitle("邀请有礼！" + productName);
                 shareInfo.setSpreadContent("您的好友"+ "为您送来TA的专属邀请，赶快点击查看惊喜吧～");
                 shareInfo.setSpreadUrl(ApiConfig.getHost() + url);
+                Log.e("my", "share: memberCode" + memberCode + " productCode:" + productCode + " productName:" + productName + " url:" + url + " image:" + image);
+                Log.e("my", "ShareInfo: getImgUrl" + shareInfo.getImgUrl() + " getSpreadContent:" + shareInfo.getSpreadContent() + " getSpreadUrl:"+  shareInfo.getSpreadUrl() + " getTitle:"+ shareInfo.getTitle());
                 showNativeShareDialog(shareInfo);
             }
         });
