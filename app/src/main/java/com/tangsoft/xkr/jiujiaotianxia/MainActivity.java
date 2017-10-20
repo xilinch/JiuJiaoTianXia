@@ -74,15 +74,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @JavascriptInterface
-    public void addProductToCart(final String memberCode,final String productCode,final String productName,final String url,final String image){
+    public void addProductToCartImage(final String memberCode,final String productCode,final String productName,final String productDetail, final String url,final String image){
         //分享
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 ShareInfo shareInfo =  new ShareInfo();
                 shareInfo.setImgUrl(ApiConfig.getHost() + image);
-                shareInfo.setTitle("邀请有礼！" + productName);
-                shareInfo.setSpreadContent("您的好友"+ "为您送来TA的专属邀请，赶快点击查看惊喜吧～");
+                shareInfo.setTitle(productName);
+                shareInfo.setSpreadContent(productDetail);
                 shareInfo.setSpreadUrl(ApiConfig.getHost() + url);
                 Log.e("my", "share: memberCode" + memberCode + " productCode:" + productCode + " productName:" + productName + " url:" + url + " image:" + image);
                 Log.e("my", "ShareInfo: getImgUrl" + shareInfo.getImgUrl() + " getSpreadContent:" + shareInfo.getSpreadContent() + " getSpreadUrl:"+  shareInfo.getSpreadUrl() + " getTitle:"+ shareInfo.getTitle());

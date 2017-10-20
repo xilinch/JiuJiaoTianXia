@@ -166,30 +166,24 @@ public class UtilShare {
 			msg.description = isWxFriend ?  shareTitle :shareContent;
 			Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(),R.mipmap.ic_launcher);
 			sendShare(bitmap,isWxFriend,msg,mWxAPI, Bitmap.CompressFormat.JPEG);
-			imageLoader.loadImage(picUrl, new ImageLoadingListener() {
-				@Override
-				public void onLoadingStarted(String s, View view) {
-				}
-
-				@Override
-				public void onLoadingFailed(String s, View view, FailReason failReason) {
-					sendShare(null,isWxFriend,msg,mWxAPI, Bitmap.CompressFormat.PNG);
-				}
-
-				@Override
-				public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-					sendShare(bitmap,isWxFriend,msg,mWxAPI, Bitmap.CompressFormat.JPEG);
-				}
-
-				@Override
-				public void onLoadingCancelled(String s, View view) {
-					//sendShare(null,isWxFriend,msg,wxApi,CompressFormat.PNG);
-				}
-			});
-//			Glide.with(activity).asBitmap().load(picUrl).into(new SimpleTarget<Bitmap>() {
+//			imageLoader.loadImage(picUrl, new ImageLoadingListener() {
 //				@Override
-//				public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-//					sendShare(resource,isWxFriend,msg,mWxAPI, Bitmap.CompressFormat.JPEG);
+//				public void onLoadingStarted(String s, View view) {
+//				}
+//
+//				@Override
+//				public void onLoadingFailed(String s, View view, FailReason failReason) {
+//					sendShare(null,isWxFriend,msg,mWxAPI, Bitmap.CompressFormat.PNG);
+//				}
+//
+//				@Override
+//				public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+//					sendShare(bitmap,isWxFriend,msg,mWxAPI, Bitmap.CompressFormat.JPEG);
+//				}
+//
+//				@Override
+//				public void onLoadingCancelled(String s, View view) {
+//					//sendShare(null,isWxFriend,msg,wxApi,CompressFormat.PNG);
 //				}
 //			});
 
