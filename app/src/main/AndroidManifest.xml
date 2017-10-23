@@ -72,7 +72,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="1106175996" />
+                <data android:scheme="wx0b0180abce364a9d" />
             </intent-filter>
         </activity>
         <activity android:name=".wxapi.WXEntryActivity"

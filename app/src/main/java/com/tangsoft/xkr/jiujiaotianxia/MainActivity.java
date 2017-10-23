@@ -80,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 ShareInfo shareInfo =  new ShareInfo();
-                shareInfo.setImgUrl(ApiConfig.getHost() + image);
+                shareInfo.setImgUrl(image);
                 shareInfo.setTitle(productName);
                 shareInfo.setSpreadContent(productDetail);
-                shareInfo.setSpreadUrl(ApiConfig.getHost() + url);
+                shareInfo.setSpreadUrl(url);
                 Log.e("my", "share: memberCode" + memberCode + " productCode:" + productCode + " productName:" + productName + " url:" + url + " image:" + image);
                 Log.e("my", "ShareInfo: getImgUrl" + shareInfo.getImgUrl() + " getSpreadContent:" + shareInfo.getSpreadContent() + " getSpreadUrl:"+  shareInfo.getSpreadUrl() + " getTitle:"+ shareInfo.getTitle());
                 showNativeShareDialog(shareInfo);

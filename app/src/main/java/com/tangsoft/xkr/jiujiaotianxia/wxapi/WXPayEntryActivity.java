@@ -1,6 +1,7 @@
 package com.tangsoft.xkr.jiujiaotianxia.wxapi;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,17 +35,43 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        api.handleIntent(intent, this);
+    }
+
+    @Override
     public void onResp(BaseResp resp) {
         Log.i(this.getClass().getSimpleName(),  "微信返回结果errCode=" + resp.errCode + ", errStr=" + resp.errStr);
         // 微信支付
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-            Intent intent = new Intent();
-            Bundle bundle = new Bundle();
-            resp.toBundle(bundle);
-            intent.putExtras(bundle);
+
+            switch (resp.errCode) {
+                case BaseResp.ErrCode.ERR_OK:
+                    toastShow(WXPayEntryActivity.this, "通过微信支付成功");
+                    break;
+                case BaseResp.ErrCode.ERR_USER_CANCEL:
+                    toastShow(WXPayEntryActivity.this, "通过微信支付取消");
+                    break;
+                case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                    toastShow(WXPayEntryActivity.this, "通过微信支付认证失败");
+                    break;
+                default:
+                    toastShow(WXPayEntryActivity.this, "通过微信支付失败");
+                    break;
+            }
+//            Intent intent = new Intent();
+//            Bundle bundle = new Bundle();
+//            resp.toBundle(bundle);
+//            intent.putExtras(bundle);
 //            intent.setAction(WXPayEntity.ACTION_PAY_RESULT_WECHAT);
-            sendBroadcast(intent);
+//            sendBroadcast(intent);
         }
         finish();
+    }
+
+    private void toastShow(Context context, String msg){
+        Toast.makeText(WXPayEntryActivity.this,msg,Toast.LENGTH_SHORT).show();
     }
 }

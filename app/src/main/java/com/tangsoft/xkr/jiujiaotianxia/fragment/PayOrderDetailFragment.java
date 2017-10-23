@@ -360,28 +360,29 @@ public class PayOrderDetailFragment extends DialogFragment {
             wxInfo = data;
             if (activity != null && wxInfo.length() > 0) {
                 IWXAPI msgApi = WXAPIFactory.createWXAPI(activity, WXPayEntryActivity.WX_APPID);
-                try{
-                    if(!msgApi.isWXAppInstalled()){
+                try {
+                    if (!msgApi.isWXAppInstalled()) {
                         Toast.makeText(getContext(), "没有安装微信支付", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    if(!msgApi.isWXAppSupportAPI()){
+                    if (!msgApi.isWXAppSupportAPI()) {
                         Toast.makeText(getContext(), "微信不支持", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     PayReq request = new PayReq();
                     request.appId = jsonObject.optString("appid");
                     request.partnerId = jsonObject.optString("partnerid");
-                    request.prepayId= jsonObject.optString("partnerid");
+                    request.prepayId = jsonObject.optString("prepayid");
                     request.packageValue = jsonObject.optString("package");
-                    request.nonceStr= jsonObject.optString("noncestr");
-                    request.timeStamp= jsonObject.optString("timestamp");
-                    request.sign= jsonObject.optString("sign");
+                    request.nonceStr = jsonObject.optString("noncestr");
+                    request.timeStamp = jsonObject.optString("timestamp");
+                    request.sign = jsonObject.optString("sign");
                     msgApi.sendReq(request);
-                }catch (Exception e){
+                } catch (Exception e) {
                     Toast.makeText(getContext(), "没有安装微信支付", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();}
+                    e.printStackTrace();
+                }
             } else {
                 Toast.makeText(activity, "调用支付宝异常!", Toast.LENGTH_SHORT).show();
             }

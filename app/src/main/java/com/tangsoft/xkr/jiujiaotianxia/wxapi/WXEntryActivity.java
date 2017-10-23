@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
-import com.tangsoft.xkr.jiujiaotianxia.util.UtilShare;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 /**
  *
@@ -19,11 +20,12 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     private static final int RETURN_MSG_TYPE_LOGIN = 1;
     private static final int RETURN_MSG_TYPE_SHARE = 2;
     private String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
-
+    private IWXAPI mWxAPI;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UtilShare.mWxAPI.handleIntent(getIntent(),this);
+        mWxAPI = WXAPIFactory.createWXAPI(this, WXPayEntryActivity.WX_APPID);
+        mWxAPI.handleIntent(getIntent(),this);
     }
 
     @Override
