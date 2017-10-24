@@ -36,7 +36,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     @Override
     public void onResp(BaseResp baseResp) {
         Log.i("my",baseResp.errStr);
-        Log.i("my","´íÎóÂë : " + baseResp.errCode + "");
+        Log.i("my","9´íÎóÂë : " + baseResp.errCode + "");
         switch (baseResp.errCode) {
 
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
