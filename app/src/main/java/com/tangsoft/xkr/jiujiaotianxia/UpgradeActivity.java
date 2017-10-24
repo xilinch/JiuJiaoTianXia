@@ -94,7 +94,7 @@ public class UpgradeActivity extends Activity {
 //        upgradeModel.setDownloadUrl("http://gdown.baidu.com/data/wisegame/74cc5f397f25b197/yingyongbao_7042130.apk");
         //测试代码---end
 
-        if ("1".equals(upgradeModel.isForcedUpdate)) {
+        if ("1".equals(upgradeModel.is_mandatory_update)) {
             upgradeDialog = new UpgradeForceDialog(this, upgradeModel);
             upgradeDialog.show();
         } else {

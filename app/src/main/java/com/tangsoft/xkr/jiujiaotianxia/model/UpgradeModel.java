@@ -8,14 +8,9 @@ import java.io.Serializable;
 
 public class UpgradeModel implements Serializable {
     public static final String TAG = "UpgradeModel";
-    public String phoneOS;
-    public String versionNo;
+    public String is_mandatory_update;
+    public String updateContent;
     public String versionName;
     public String downloadUrl;
-    public String releaseTime;
-    public String fileRsurl;
-    public String updateContent;
-    public String copyright;
-    public String isForcedUpdate;
-    public String createTime;
+
 }

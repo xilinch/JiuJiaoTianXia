@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.tangsoft.xkr.jiujiaotianxia.MainActivity;
 import com.tencent.mm.sdk.constants.ConstantsAPI;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -50,6 +51,9 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
             switch (resp.errCode) {
                 case BaseResp.ErrCode.ERR_OK:
                     toastShow(WXPayEntryActivity.this, "通过微信支付成功");
+                    Intent intent = new Intent();
+                    intent.setAction(MainActivity.ACTION_WX_PAY_SUCCESS);
+                    WXPayEntryActivity.this.sendBroadcast(intent);
                     break;
                 case BaseResp.ErrCode.ERR_USER_CANCEL:
                     toastShow(WXPayEntryActivity.this, "通过微信支付取消");

@@ -17,6 +17,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.lidroid.xutils.util.LogUtils;
 import com.tangsoft.xkr.jiujiaotianxia.api.ApiConfig;
 import com.tangsoft.xkr.jiujiaotianxia.dialog.ShareDialog;
 import com.tangsoft.xkr.jiujiaotianxia.fragment.PayOrderDetailFragment;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        registerMyBroadcast();
         webView.getSettings().setUseWideViewPort(true);//设置此属性，可任意比例缩放。大视图模式
         webView.getSettings().setLoadWithOverviewMode(true);//和setUseWideViewPort(true)一起解决网页自适应问题
         webView.setWebViewClient(new WebViewClient());
@@ -120,6 +122,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public static final String ACTION_WX_PAY_SUCCESS = "ACTION_WX_PAY_SUCCESS";
+
+    private BroadcastReceiver wXPayBroadcastReciver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("my","action:" + intent.getAction());
+            if(ACTION_WX_PAY_SUCCESS.equals(intent.getAction())){
+                loadPayResult();
+            }
+        }
+    };
+
+    private void registerMyBroadcast(){
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_WX_PAY_SUCCESS);
+        registerReceiver(wXPayBroadcastReciver,filter);
+    }
+
+    private void unRegisterMyBroadcast(){
+        if(wXPayBroadcastReciver != null){
+            unregisterReceiver(wXPayBroadcastReciver);
+        }
+    }
 
     public void loadPayResult() {
         runOnUiThread(new Runnable() {
@@ -174,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         if (myBroadcastReciver != null) {
             unregisterReceiver(myBroadcastReciver);
         }
+        unRegisterMyBroadcast();
     }
 
     private UpgradeChoiceSilenceDialog upgradeChoiceSilenceDialog;

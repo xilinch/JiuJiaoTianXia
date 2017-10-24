@@ -9,14 +9,13 @@ import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
+import com.lidroid.xutils.util.LogUtils;
 import com.tangsoft.xkr.jiujiaotianxia.MainActivity;
 import com.tangsoft.xkr.jiujiaotianxia.UpgradeActivity;
 import com.tangsoft.xkr.jiujiaotianxia.model.UpgradeModel;
 import org.json.JSONObject;
 
 import java.util.Date;
-
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
 
 
 /**
@@ -46,7 +45,7 @@ public class UtilCheckUpgrade {
         params.addBodyParameter("manufactor", UtilApp.getManufactor());
         params.addBodyParameter("channel",UtilApp.getChanel(activity));
         params.addBodyParameter("versioncode ", UtilSystem.getVersionCode(activity) + "");
-        String url = "api.xtyxmall.com/index.php/AppVersion/jjtx";
+        String url = "http://api.xtyxmall.com/index.php/AppVersion/jjtx";
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -57,14 +56,26 @@ public class UtilCheckUpgrade {
                         Log.i("my", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            JSONObject dataJsonObject = jsonObject.optJSONObject("data");
-                            String stateCode = jsonObject.optString("stateCode");
-                            int systemCode = jsonObject.optInt("systemCode");
-                            int stateCode_int = Integer.parseInt(stateCode);
-                            if (stateCode_int == 0 && systemCode == 200 && dataJsonObject != null && !TextUtils.isEmpty(dataJsonObject.toString())) {
+                            JSONObject dataJsonObject = jsonObject.optJSONObject("datas");
+
+
+                            String systemCode = jsonObject.optString("code");
+                            int stateCode_int = Integer.parseInt(systemCode);
+                            if (stateCode_int == 1 && dataJsonObject != null) {
+                                String is_mandatory_update = dataJsonObject.optString("is_mandatory_update");
+                                String notice = dataJsonObject.optString("notice");
+                                String update_version = dataJsonObject.optString("update_version");
+                                String url = dataJsonObject.optString("url");
                                 //接口成功
-//                                UpgradeModel upgradeModel = FastJsonUtil.parseObject(jsonObject.toString(), UpgradeModel.class);
                                 UpgradeModel upgradeModel = new UpgradeModel();
+                                //测试代码
+                                upgradeModel.is_mandatory_update = "0";
+                                upgradeModel.downloadUrl = "http://gdown.baidu.com/data/wisegame/68d7f8ddbbf3480b/yingyongbao_7122130.apk";
+                                //测试代码 end
+                                upgradeModel.is_mandatory_update = is_mandatory_update;
+                                upgradeModel.updateContent = notice;
+                                upgradeModel.versionName = update_version;
+                                upgradeModel.downloadUrl = url;
 
                                 //toUpgrade
                                 toUpgrade(activity, upgradeModel);
@@ -79,23 +90,23 @@ public class UtilCheckUpgrade {
 
             @Override
             public void onFailure(HttpException e, String s) {
-
+                LogUtils.e(s);
             }
         });
     }
 
     public static void toUpgrade(Activity activity, UpgradeModel upgradeModel) {
-        if (upgradeModel != null && "1".equals(upgradeModel.isForcedUpdate)) {
+        if (upgradeModel != null && "1".equals(upgradeModel.is_mandatory_update)) {
             //强制更新
             Intent intent = new Intent(activity, UpgradeActivity.class);
             intent.putExtra(UpgradeModel.TAG, upgradeModel);
             activity.startActivity(intent);
-        } else if (upgradeModel != null && "0".equals(upgradeModel.isForcedUpdate)) {
+        } else if (upgradeModel != null && "0".equals(upgradeModel.is_mandatory_update)) {
             //可选升级
             Intent intent = new Intent(activity, UpgradeActivity.class);
             intent.putExtra(UpgradeModel.TAG, upgradeModel);
             //强制升级，需要判断是否已忽略版本
-            if ("1".equals(upgradeModel.isForcedUpdate)) {
+            if ("1".equals(upgradeModel.is_mandatory_update)) {
                 activity.startActivity(intent);
             } else {
                 String version = upgradeModel.versionName;
@@ -119,39 +130,5 @@ public class UtilCheckUpgrade {
 
         }
     }
-
-    /**
-     * 生成升级请求参数
-     *
-     * @param activity
-     * @return
-     */
-//    private static HttpEntity createUpgradeHttpEntity(Activity activity) {
-//        //insideVersion内部版本号，100
-//        //currentVersion对外版本号 2.0.1
-//        //clientUseragent渠道号
-//        //appType 客户端类型 android0，ios 1，其他2
-//        //netstate 网络类型，wifi则为wifi，
-//        JSONObject jsonObject = new JSONObject();
-//        HttpEntity httpEntity = null;
-//        try {
-////            jsonObject.put("insideVersion", AppUtil.getVersionCode(activity));
-//            jsonObject.put("currentVersion", AppUtil.getVersionName(activity));
-////            jsonObject.put("currentVersion", "v3.2.0");
-//            String channel = ChannelUtil.getChannelFromApk(activity);
-////            String channel= "vivo";
-//            if (!StringUtils.isBlank(channel) && !channel.equals("unkonwn")) {
-//                jsonObject.put("clientUseragent", channel);
-//            }
-//            jsonObject.put("appType", "0");
-//            jsonObject.put("netstate", NetworkUtils.getNetState(activity));
-//            httpEntity = new StringEntity(jsonObject.toString());
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//
-//        } finally {
-//            return httpEntity;
-//        }
-//    }
 
 }
