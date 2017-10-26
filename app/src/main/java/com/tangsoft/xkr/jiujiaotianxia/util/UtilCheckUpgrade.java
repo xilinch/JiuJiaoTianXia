@@ -33,12 +33,6 @@ public class UtilCheckUpgrade {
     public static void checkUpgrade(final Activity activity) {
         HttpUtils httpUtils = new HttpUtils();
         RequestParams params = new RequestParams();
-//        BasicNameValuePair nameValuePair = new BasicNameValuePair("platform","android");
-//        BasicNameValuePair nameValuePair = new BasicNameValuePair("version", UtilSystem.getVersionName(activity));
-//        BasicNameValuePair nameValuePair = new BasicNameValuePair("osversion",UtilSystem.getOSVersion());
-//        BasicNameValuePair nameValuePair = new BasicNameValuePair("manufactor", UtilApp.getManufactor());
-//        BasicNameValuePair nameValuePair = new BasicNameValuePair("channel",UtilApp.getChanel(activity));
-//        BasicNameValuePair nameValuePair = new BasicNameValuePair("versioncode ", UtilSystem.getVersionCode(activity) + "");
         params.addBodyParameter("platform","android");
         params.addBodyParameter("version", UtilSystem.getVersionName(activity));
         params.addBodyParameter("osversion",UtilSystem.getOSVersion());
@@ -69,8 +63,8 @@ public class UtilCheckUpgrade {
                                 //接口成功
                                 UpgradeModel upgradeModel = new UpgradeModel();
                                 //测试代码
-                                upgradeModel.is_mandatory_update = "0";
-                                upgradeModel.downloadUrl = "http://gdown.baidu.com/data/wisegame/68d7f8ddbbf3480b/yingyongbao_7122130.apk";
+//                                upgradeModel.is_mandatory_update = "0";
+//                                upgradeModel.downloadUrl = "http://gdown.baidu.com/data/wisegame/68d7f8ddbbf3480b/yingyongbao_7122130.apk";
                                 //测试代码 end
                                 upgradeModel.is_mandatory_update = is_mandatory_update;
                                 upgradeModel.updateContent = notice;

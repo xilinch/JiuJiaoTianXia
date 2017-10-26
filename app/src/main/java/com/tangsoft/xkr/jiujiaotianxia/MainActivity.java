@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkUpgrade() {
         //测试代码
-        UpgradeModel upgradeModel = new UpgradeModel();
+//        UpgradeModel upgradeModel = new UpgradeModel();
 //        upgradeModel.isForcedUpdate = "0";
 //        upgradeModel.versionName = "11.2.5";
 //        upgradeModel.copyright = "copyright";
