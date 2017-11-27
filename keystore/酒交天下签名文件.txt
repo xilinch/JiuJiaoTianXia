@@ -1,0 +1,8 @@
+�������ݲ����޸�
+
+password: JiuJiaoTianXia2017_Android
+
+alias��JiuJiaoTianXia
+
+1.2 增加分享和升级
+1.3 增加邀请好友

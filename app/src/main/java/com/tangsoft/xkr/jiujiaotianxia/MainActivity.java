@@ -75,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
     private void checkUpgrade() {
         //测试代码
 //        UpgradeModel upgradeModel = new UpgradeModel();
-//        upgradeModel.isForcedUpdate = "0";
+//        upgradeModel.is_mandatory_update = "0";
 //        upgradeModel.versionName = "11.2.5";
-//        upgradeModel.copyright = "copyright";
 //        upgradeModel.downloadUrl = "http://gdown.baidu.com/data/wisegame/6a2d8a62ec153552/yingyongbao_7102130.apk";
-//        upgradeModel.updateContent = "updateContentupdateContentupdateContentupdateContentupdateContentupdateContentupdateContent";
+//        upgradeModel.updateContent = "1.增加了微信支付，功能更强大. 2.增加了微信分享功能.3.增加了应用内下载，无需下载直接安装功能.";
+//        upgradeBySilence(upgradeModel);
 //        UtilCheckUpgrade.toUpgrade(this, upgradeModel);
 //        测试代码---end
         UtilCheckUpgrade.checkUpgrade(this);
@@ -112,6 +112,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @JavascriptInterface
+    public void invitingFriend(final String productName, final String productDetail, final String url, final String img) {
+        //分享
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ShareInfo shareInfo = new ShareInfo();
+                shareInfo.setImgUrl(img);
+                shareInfo.setTitle(productName);
+                shareInfo.setSpreadContent(productDetail);
+                shareInfo.setSpreadUrl(url);
+                Log.e("my", "ShareInfo: getImgUrl" + shareInfo.getImgUrl() + " getSpreadContent:" + shareInfo.getSpreadContent() + " getSpreadUrl:" + shareInfo.getSpreadUrl() + " getTitle:" + shareInfo.getTitle());
+                showNativeShareDialog(shareInfo);
+            }
+        });
     }
 
     private void showNativeShareDialog(ShareInfo shareInfo) {
