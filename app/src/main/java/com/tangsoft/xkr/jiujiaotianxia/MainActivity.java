@@ -131,6 +131,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @JavascriptInterface
+    public void signPlayGame(final String title, final String url) {
+        //分享
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+                intent.putExtra(DrawActivity.TAG_URL, url);
+                intent.putExtra(DrawActivity.TAG_TITLE, title);
+            }
+        });
+
+    }
+
     private void showNativeShareDialog(ShareInfo shareInfo) {
         if (mShareDialog != null && !mShareDialog.isShowing()) {
             mShareDialog.setShareInfo(shareInfo);

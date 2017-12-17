@@ -7,9 +7,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,6 +23,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.lidroid.xutils.util.LogUtils;
+
+import java.util.Random;
 
 
 /**
@@ -35,7 +42,10 @@ public class DrawActivity extends Activity implements SensorEventListener {
     private Handler myHandler = new Handler();
     private SensorManager mSensorManager;
     public static final String TAG_URL = "TAG_URL";
+    public static final String TAG_TITLE = "TAG_TITLE";
     private boolean isCQ = false;
+    private SoundPool soundPool;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +57,12 @@ public class DrawActivity extends Activity implements SensorEventListener {
 
     private void initView(){
         tv_title = (TextView) findViewById(R.id.tv_title);
+        if(getIntent() != null && getIntent().getExtras() != null){
+            String title = getIntent().getExtras().getString(TAG_TITLE);
+            if(!TextUtils.isEmpty(title)){
+                tv_title.setText(title);
+            }
+        }
         tv_introduce = (TextView) findViewById(R.id.tv_introduce);
         back = (LinearLayout) findViewById(R.id.back);
         iv1 = (ImageView) findViewById(R.id.iv1);
@@ -55,8 +71,9 @@ public class DrawActivity extends Activity implements SensorEventListener {
         // 为方向传感器注册监听器
         if(mSensorManager != null){
             mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
-//            mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_GAME);
         }
+        Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(iv1);
+
     }
 
     private void initListener(){
@@ -84,6 +101,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
      */
     private synchronized void showBf(){
         if(!isCQ){
+            isCQ = true;
             try {
                 Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
                 iv2.setVisibility(View.INVISIBLE);
@@ -92,7 +110,8 @@ public class DrawActivity extends Activity implements SensorEventListener {
                     public void run() {
                         showCQ();
                     }
-                }, 5750);
+                }, 4750);
+                playSoundDJ();
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -105,6 +124,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
      */
     private synchronized void showLf(){
         if(!isCQ){
+            isCQ = true;
             iv2.setVisibility(View.INVISIBLE);
             Glide.with(DrawActivity.this).load("file:///android_asset/lf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
             myHandler.postDelayed(new Runnable() {
@@ -112,7 +132,8 @@ public class DrawActivity extends Activity implements SensorEventListener {
                 public void run() {
                     showCQ();
                 }
-            }, 5750);
+            }, 4750);
+            playSoundDJ();
         }
 
     }
@@ -123,8 +144,33 @@ public class DrawActivity extends Activity implements SensorEventListener {
      */
     private synchronized void showCQ(){
         iv2.setVisibility(View.VISIBLE);
-        Glide.with(DrawActivity.this).load("file:///android_asset/cq.gif").into(new GlideDrawableImageViewTarget(iv2, 1));
-        isCQ = false;
+        int i = (int)Math.ceil(39 * (Math.random()));
+        Log.i("my","i:" + i);
+        Glide.with(DrawActivity.this).load("file:///android_asset/"+ i + ".gif").into(new GlideDrawableImageViewTarget(iv2, 1));
+        myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isCQ = false;
+            }
+        },1000);
+        playSoundCQ();
+
+    }
+
+    private void playSoundDJ(){
+        if(soundPool == null){
+            soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,0);
+        }
+        soundPool.load(this,R.raw.dj,1);
+        soundPool.play(1,1, 1, 0, 1, 1);
+    }
+
+    private void playSoundCQ(){
+        if(soundPool == null){
+            soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,0);
+        }
+        soundPool.load(this,R.raw.cq,1);
+        soundPool.play(1,1, 1, 0, 0, 1);
     }
 
     @Override
@@ -146,12 +192,12 @@ public class DrawActivity extends Activity implements SensorEventListener {
                     if(values[0] > 30 || values[0] <= -20){
                         //视为左右
                         showLf();
-                        Toast.makeText(DrawActivity.this,"左右",Toast.LENGTH_SHORT).show();
-                        System.out.println(sb.toString());
+//                        Toast.makeText(DrawActivity.this,"左右",Toast.LENGTH_SHORT).show();
+//                        System.out.println(sb.toString());
                     } else if (values[1] > 30 || values[1] <= -20 || values[1] > 30 || values[1] <= -20){
                         showBf();
-                        Toast.makeText(DrawActivity.this,"前后",Toast.LENGTH_SHORT).show();
-                        System.out.println(sb.toString());
+//                        Toast.makeText(DrawActivity.this,"前后",Toast.LENGTH_SHORT).show();
+//                        System.out.println(sb.toString());
                     }
                     break;
                 case Sensor.TYPE_ORIENTATION:
