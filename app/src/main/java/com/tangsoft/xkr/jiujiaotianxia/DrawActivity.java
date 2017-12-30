@@ -24,6 +24,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.lidroid.xutils.util.LogUtils;
+import com.tangsoft.xkr.jiujiaotianxia.config.DrawContent;
+import com.tangsoft.xkr.jiujiaotianxia.dialog.ShareDialog;
+import com.tangsoft.xkr.jiujiaotianxia.model.ShareInfo;
 
 import java.util.Random;
 
@@ -39,13 +42,21 @@ public class DrawActivity extends Activity implements SensorEventListener {
     private LinearLayout back;
     private ImageView iv1;
     private ImageView iv2;
+    private ImageView iv_agin;
+    private ImageView iv_share;
+    private LinearLayout ll_action;
+    private LinearLayout ll_guid;
     private Handler myHandler = new Handler();
     private SensorManager mSensorManager;
     public static final String TAG_URL = "TAG_URL";
     public static final String TAG_TITLE = "TAG_TITLE";
+    public static final String TAG_USERID = "TAG_USERID";
     private boolean isCQ = false;
     private SoundPool soundPool;
-
+    private int drawIndex = 1;
+    private String userId = "";
+    private String url = "";
+    private ShareDialog mShareDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +70,8 @@ public class DrawActivity extends Activity implements SensorEventListener {
         tv_title = (TextView) findViewById(R.id.tv_title);
         if(getIntent() != null && getIntent().getExtras() != null){
             String title = getIntent().getExtras().getString(TAG_TITLE);
+            userId = getIntent().getExtras().getString(TAG_USERID);
+            url = getIntent().getExtras().getString(TAG_URL);
             if(!TextUtils.isEmpty(title)){
                 tv_title.setText(title);
             }
@@ -67,12 +80,16 @@ public class DrawActivity extends Activity implements SensorEventListener {
         back = (LinearLayout) findViewById(R.id.back);
         iv1 = (ImageView) findViewById(R.id.iv1);
         iv2 = (ImageView) findViewById(R.id.iv2);
+        iv_agin = (ImageView) findViewById(R.id.iv_agin);
+        iv_share = (ImageView) findViewById(R.id.iv_share);
+        ll_action = (LinearLayout) findViewById(R.id.ll_action);
+        ll_guid = (LinearLayout) findViewById(R.id.ll_guid);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         // 为方向传感器注册监听器
         if(mSensorManager != null){
             mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
         }
-        Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(iv1);
+        Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().dontAnimate().into(iv1);
 
     }
 
@@ -94,12 +111,54 @@ public class DrawActivity extends Activity implements SensorEventListener {
                 }
             });
         }
+        iv_agin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //再来一次
+                long current = System.currentTimeMillis();
+                ll_action.setVisibility(View.GONE);
+                if(current % 2 ==0){
+                    showBf();
+                } else {
+                    showLf();
+                }
+            }
+        });
+        iv_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareInfo shareInfo = new ShareInfo();
+                shareInfo.setImgUrl("http://wx.xtyxmall.com/static/jjtx/share_logo.png");
+                shareInfo.setTitle(DrawContent.share_title);
+                shareInfo.setSpreadContent(DrawContent.content[drawIndex - 1]);
+                String url = DrawContent.share_url.replaceFirst("@",drawIndex + "");
+                url = DrawContent.share_title.replaceFirst("@",userId);
+                shareInfo.setSpreadUrl(url);
+                showNativeShareDialog(shareInfo);
+            }
+        });
+        ll_guid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ll_guid.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
+    private void showNativeShareDialog(ShareInfo shareInfo) {
+        if (mShareDialog != null && !mShareDialog.isShowing()) {
+            mShareDialog.setShareInfo(shareInfo);
+            mShareDialog.show();
+        }
+
     }
 
     /**
      * 显示前后
      */
     private synchronized void showBf(){
+        Log.e("my","showBf:" + isCQ);
         if(!isCQ){
             isCQ = true;
             try {
@@ -123,6 +182,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
      * 显示左右
      */
     private synchronized void showLf(){
+        Log.e("my","showLf:" + isCQ);
         if(!isCQ){
             isCQ = true;
             iv2.setVisibility(View.INVISIBLE);
@@ -144,33 +204,39 @@ public class DrawActivity extends Activity implements SensorEventListener {
      */
     private synchronized void showCQ(){
         iv2.setVisibility(View.VISIBLE);
-        int i = (int)Math.ceil(39 * (Math.random()));
-        Log.i("my","i:" + i);
-        Glide.with(DrawActivity.this).load("file:///android_asset/"+ i + ".gif").into(new GlideDrawableImageViewTarget(iv2, 1));
+        soundPool.stop(cqId);
+        drawIndex = (int)Math.ceil(39 * (Math.random()));
+        Log.i("my","drawIndex:" + drawIndex);
+        Glide.with(DrawActivity.this).load("file:///android_asset/"+ drawIndex + ".gif").into(new GlideDrawableImageViewTarget(iv2, 1));
         myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 isCQ = false;
+                ll_action.setVisibility(View.VISIBLE);
+                playSoundCQ();
             }
         },1000);
-        playSoundCQ();
+
 
     }
 
+    private int djId = 0;
     private void playSoundDJ(){
         if(soundPool == null){
             soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,0);
         }
         soundPool.load(this,R.raw.dj,1);
-        soundPool.play(1,1, 1, 0, 1, 1);
+        djId = soundPool.play(1,1, 1, 0, -1, 0.4f);
     }
 
+    private int cqId = 0;
     private void playSoundCQ(){
         if(soundPool == null){
             soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,0);
         }
+        soundPool.stop(djId);
         soundPool.load(this,R.raw.cq,1);
-        soundPool.play(1,1, 1, 0, 0, 1);
+        cqId = soundPool.play(1,1, 1, 0, 0, 1);
     }
 
     @Override
@@ -284,6 +350,9 @@ public class DrawActivity extends Activity implements SensorEventListener {
         super.onDestroy();
         if(mSensorManager != null){
             mSensorManager.unregisterListener(this);
+        }
+        if(soundPool != null){
+            soundPool.release();
         }
     }
 }
