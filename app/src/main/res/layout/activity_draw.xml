@@ -54,7 +54,7 @@
 
         <ImageView
             android:id="@+id/iv1"
-            android:background="@color/transparent"
+            android:background="@color/transparent_white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />

@@ -448,6 +448,15 @@ public class DrawActivity extends Activity implements SensorEventListener {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if(soundPool != null){
+            soundPool.stop(cqId);
+            soundPool.stop(djId);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if(mSensorManager != null){
