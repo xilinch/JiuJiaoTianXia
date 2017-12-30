@@ -18,17 +18,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.lidroid.xutils.util.LogUtils;
 import com.tangsoft.xkr.jiujiaotianxia.config.DrawContent;
 import com.tangsoft.xkr.jiujiaotianxia.dialog.ShareDialog;
 import com.tangsoft.xkr.jiujiaotianxia.model.ShareInfo;
-
-import java.util.Random;
 
 
 /**
@@ -37,26 +32,82 @@ import java.util.Random;
 
 public class DrawActivity extends Activity implements SensorEventListener {
 
+    /**
+     * 标题
+     */
     private TextView tv_title;
+    /**
+     * 介绍
+     */
     private TextView tv_introduce;
+    /**
+     * 返回
+     */
     private LinearLayout back;
+    /**
+     * 摇动的签筒
+     */
     private ImageView iv1;
+    /**
+     * 求签结果
+     */
     private ImageView iv2;
+    /**
+     * 再来一次
+     */
     private ImageView iv_agin;
+    /**
+     * 分享
+     */
     private ImageView iv_share;
+    /**
+     * 分享和再来一次的父节点
+     */
     private LinearLayout ll_action;
+    /**
+     * 引导页
+     */
     private LinearLayout ll_guid;
     private Handler myHandler = new Handler();
+    /**
+     * 传感器
+     */
     private SensorManager mSensorManager;
     public static final String TAG_URL = "TAG_URL";
     public static final String TAG_TITLE = "TAG_TITLE";
     public static final String TAG_USERID = "TAG_USERID";
+    /**
+     * 出签
+     */
     private boolean isCQ = false;
+    /**
+     * 轻量级的声音播放
+     */
     private SoundPool soundPool;
+    /**
+     * 出签结果
+     */
     private int drawIndex = 1;
+    /**
+     * 用户id
+     */
     private String userId = "";
-    private String url = "";
+    /**
+     * 分享链接
+     */
+    private String url = "http://app.jiujtx.com/Member/game-tips2.html";
+    /**
+     * 分享框
+     */
     private ShareDialog mShareDialog;
+    /**
+     * 打签播放的流id
+     */
+    private int djId = 0;
+    /**
+     * 出签播放的流id
+     */
+    private int cqId = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,8 +140,28 @@ public class DrawActivity extends Activity implements SensorEventListener {
         if(mSensorManager != null){
             mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
         }
-        Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().dontAnimate().into(iv1);
+        preLoadSound();
+        if(ll_guid.getVisibility() == View.VISIBLE){
+            iv1.setVisibility(View.INVISIBLE);
+        } else {
+            iv1.setVisibility(View.VISIBLE);
+        }
+        try {
+            Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().into(iv1);
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
+    }
 
+    /**
+     * 预加载声音文件
+     */
+    private void preLoadSound(){
+        if(soundPool == null){
+            soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,0);
+        }
+        soundPool.load(this,R.raw.dj,1);
+        soundPool.load(this,R.raw.cq,1);
     }
 
     private void initListener(){
@@ -101,7 +172,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
             }
         });
         if(getIntent() != null && getIntent().getExtras() != null){
-            final String url = getIntent().getExtras().getString("");
+
             tv_introduce.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -132,7 +203,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
                 shareInfo.setTitle(DrawContent.share_title);
                 shareInfo.setSpreadContent(DrawContent.content[drawIndex - 1]);
                 String url = DrawContent.share_url.replaceFirst("@",drawIndex + "");
-                url = DrawContent.share_title.replaceFirst("@",userId);
+                url = url.replaceFirst("@",userId);
                 shareInfo.setSpreadUrl(url);
                 showNativeShareDialog(shareInfo);
             }
@@ -141,12 +212,20 @@ public class DrawActivity extends Activity implements SensorEventListener {
             @Override
             public void onClick(View v) {
                 ll_guid.setVisibility(View.GONE);
+                iv1.setVisibility(View.VISIBLE);
             }
         });
     }
 
 
+    /**
+     * 显示分享
+     * @param shareInfo
+     */
     private void showNativeShareDialog(ShareInfo shareInfo) {
+        if(mShareDialog == null){
+            mShareDialog = new ShareDialog(DrawActivity.this);
+        }
         if (mShareDialog != null && !mShareDialog.isShowing()) {
             mShareDialog.setShareInfo(shareInfo);
             mShareDialog.show();
@@ -161,6 +240,8 @@ public class DrawActivity extends Activity implements SensorEventListener {
         Log.e("my","showBf:" + isCQ);
         if(!isCQ){
             isCQ = true;
+            iv_agin.setVisibility(View.GONE);
+            iv_share.setVisibility(View.GONE);
             try {
                 Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
                 iv2.setVisibility(View.INVISIBLE);
@@ -170,6 +251,12 @@ public class DrawActivity extends Activity implements SensorEventListener {
                         showCQ();
                     }
                 }, 4750);
+                myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        soundPool.stop(djId);
+                    }
+                },3000);
                 playSoundDJ();
             } catch (Exception e){
                 e.printStackTrace();
@@ -186,13 +273,25 @@ public class DrawActivity extends Activity implements SensorEventListener {
         if(!isCQ){
             isCQ = true;
             iv2.setVisibility(View.INVISIBLE);
-            Glide.with(DrawActivity.this).load("file:///android_asset/lf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
-            myHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showCQ();
-                }
-            }, 4750);
+            iv_agin.setVisibility(View.GONE);
+            iv_share.setVisibility(View.GONE);
+            try {
+                Glide.with(DrawActivity.this).load("file:///android_asset/lf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
+                myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showCQ();
+                    }
+                }, 4750);
+                myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        soundPool.stop(djId);
+                    }
+                },3000);
+            } catch (Exception excaption){
+                excaption.printStackTrace();
+            }
             playSoundDJ();
         }
 
@@ -214,28 +313,31 @@ public class DrawActivity extends Activity implements SensorEventListener {
                 isCQ = false;
                 ll_action.setVisibility(View.VISIBLE);
                 playSoundCQ();
+                iv_agin.setVisibility(View.VISIBLE);
+                iv_share.setVisibility(View.VISIBLE);
             }
         },1000);
 
 
     }
 
-    private int djId = 0;
+    /**
+     * 播放打签的声音
+     */
     private void playSoundDJ(){
-        if(soundPool == null){
-            soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,0);
-        }
-        soundPool.load(this,R.raw.dj,1);
-        djId = soundPool.play(1,1, 1, 0, -1, 0.4f);
+        myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                djId = soundPool.play(1,1, 1, 0, -1, 0.4f);
+            }
+        }, 500);
+
     }
 
-    private int cqId = 0;
+    /**
+     * 播放出签的声音
+     */
     private void playSoundCQ(){
-        if(soundPool == null){
-            soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,0);
-        }
-        soundPool.stop(djId);
-        soundPool.load(this,R.raw.cq,1);
         cqId = soundPool.play(1,1, 1, 0, 0, 1);
     }
 

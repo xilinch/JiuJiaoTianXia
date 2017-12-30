@@ -132,14 +132,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @JavascriptInterface
-    public void signPlayGame(final String title, final String url) {
+    public void signPlayGame(final String userId,final String title, final String url) {
+
         //分享
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.e("my", " userId" + userId + " title:" + title + " url:" + url);
                 Intent intent = new Intent(MainActivity.this, DrawActivity.class);
+                intent.putExtra(DrawActivity.TAG_USERID, userId);
                 intent.putExtra(DrawActivity.TAG_URL, url);
                 intent.putExtra(DrawActivity.TAG_TITLE, title);
+                startActivity(intent);
             }
         });
 
