@@ -146,11 +146,11 @@ public class DrawActivity extends Activity implements SensorEventListener {
         } else {
             iv1.setVisibility(View.VISIBLE);
         }
-        try {
-            Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().into(iv1);
-        } catch (Exception exception){
-            exception.printStackTrace();
-        }
+//        try {
+//            Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().into(iv1);
+//        } catch (Exception exception){
+//            exception.printStackTrace();
+//        }
     }
 
     /**
@@ -186,13 +186,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
             @Override
             public void onClick(View v) {
                 //再来一次
-                long current = System.currentTimeMillis();
-                ll_action.setVisibility(View.GONE);
-                if(current % 2 ==0){
-                    showBf();
-                } else {
-                    showLf();
-                }
+                showRandom();
             }
         });
         iv_share.setOnClickListener(new View.OnClickListener() {
@@ -213,10 +207,24 @@ public class DrawActivity extends Activity implements SensorEventListener {
             public void onClick(View v) {
                 ll_guid.setVisibility(View.GONE);
                 iv1.setVisibility(View.VISIBLE);
+                showRandom();
             }
         });
     }
 
+    /**
+     * 再来一次 显示一个随机的动画
+     */
+    private synchronized void showRandom(){
+        //再来一次
+        long current = System.currentTimeMillis();
+        ll_action.setVisibility(View.GONE);
+        if(current % 2 ==0){
+            showBf();
+        } else {
+            showLf();
+        }
+    }
 
     /**
      * 显示分享
@@ -243,20 +251,20 @@ public class DrawActivity extends Activity implements SensorEventListener {
             iv_agin.setVisibility(View.GONE);
             iv_share.setVisibility(View.GONE);
             try {
-                Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
+                Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/bf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
                 iv2.setVisibility(View.INVISIBLE);
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         showCQ();
                     }
-                }, 4750);
+                }, 5750);
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         soundPool.stop(djId);
                     }
-                },3000);
+                },2500);
                 playSoundDJ();
             } catch (Exception e){
                 e.printStackTrace();
@@ -276,19 +284,19 @@ public class DrawActivity extends Activity implements SensorEventListener {
             iv_agin.setVisibility(View.GONE);
             iv_share.setVisibility(View.GONE);
             try {
-                Glide.with(DrawActivity.this).load("file:///android_asset/lf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
+                Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/lf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         showCQ();
                     }
-                }, 4750);
+                }, 5750);
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         soundPool.stop(djId);
                     }
-                },3000);
+                },2500);
             } catch (Exception excaption){
                 excaption.printStackTrace();
             }
@@ -306,7 +314,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
         soundPool.stop(cqId);
         drawIndex = (int)Math.ceil(39 * (Math.random()));
         Log.i("my","drawIndex:" + drawIndex);
-        Glide.with(DrawActivity.this).load("file:///android_asset/"+ drawIndex + ".gif").into(new GlideDrawableImageViewTarget(iv2, 1));
+        Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/"+ drawIndex + ".gif").into(new GlideDrawableImageViewTarget(iv2, 1));
         myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -328,7 +336,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
         myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                djId = soundPool.play(1,1, 1, 0, -1, 0.4f);
+                djId = soundPool.play(1,1, 1, 0, -1, 0.28f);
             }
         }, 500);
 
