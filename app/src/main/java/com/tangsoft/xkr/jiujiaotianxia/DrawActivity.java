@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -109,6 +110,11 @@ public class DrawActivity extends Activity implements SensorEventListener {
      */
     private int cqId = 0;
 
+    /**
+     * 震动
+     */
+    private Vibrator vibrator;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,8 +166,9 @@ public class DrawActivity extends Activity implements SensorEventListener {
         if(soundPool == null){
             soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,0);
         }
-        soundPool.load(this,R.raw.dj,1);
+        soundPool.load(this,R.raw.dq,1);
         soundPool.load(this,R.raw.cq,1);
+
     }
 
     private void initListener(){
@@ -310,9 +317,14 @@ public class DrawActivity extends Activity implements SensorEventListener {
         myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                playSoundCQ();
+            }
+        },500);
+        myHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
                 isCQ = false;
                 ll_action.setVisibility(View.VISIBLE);
-                playSoundCQ();
                 iv_agin.setVisibility(View.VISIBLE);
                 iv_share.setVisibility(View.VISIBLE);
             }
@@ -328,7 +340,15 @@ public class DrawActivity extends Activity implements SensorEventListener {
         myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                djId = soundPool.play(1,1, 1, 0, -1, 0.4f);
+                djId = soundPool.play(1,60, 60, 0, -1, 0.6f);
+//                try{
+//                    mediaPlayerDq.prepare();
+//                    mediaPlayerDq.start();
+//                    mediaPlayerDq.setLooping(true);
+//                }catch (Exception exception){
+//                    exception.printStackTrace();
+//                }
+
             }
         }, 500);
 
@@ -338,7 +358,17 @@ public class DrawActivity extends Activity implements SensorEventListener {
      * 播放出签的声音
      */
     private void playSoundCQ(){
-        cqId = soundPool.play(1,1, 1, 0, 0, 1);
+        if(vibrator == null){
+            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        }
+        cqId = soundPool.play(2,60, 60, 0, 0, 1);
+        vibrator.vibrate(50);
+//        try{
+//            mediaPlayerCq.prepare();
+//            mediaPlayerCq.start();
+//        }catch (Exception exception){
+//            exception.printStackTrace();
+//        }
     }
 
     @Override
@@ -453,6 +483,9 @@ public class DrawActivity extends Activity implements SensorEventListener {
         if(soundPool != null){
             soundPool.stop(cqId);
             soundPool.stop(djId);
+        }
+        if(vibrator != null){
+            vibrator.cancel();
         }
     }
 
