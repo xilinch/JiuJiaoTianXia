@@ -38,7 +38,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         Log.i("my",baseResp.errStr);
         Log.i("my","9错误码 : " + baseResp.errCode + "");
         switch (baseResp.errCode) {
-
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 if (RETURN_MSG_TYPE_SHARE == baseResp.getType()) {
@@ -64,8 +63,12 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                         Toast.makeText(WXEntryActivity.this, "微信分享成功", Toast.LENGTH_SHORT).show();
                         finish();
                         break;
+                    default:
+                        finish();
                 }
                 break;
+            default:
+                finish();
         }
 
     }
