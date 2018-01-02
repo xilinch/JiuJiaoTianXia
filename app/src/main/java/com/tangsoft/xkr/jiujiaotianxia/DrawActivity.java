@@ -114,6 +114,10 @@ public class DrawActivity extends Activity implements SensorEventListener {
      * 震动
      */
     private Vibrator vibrator;
+    /**
+     * 是否正在显示
+     */
+    private boolean isShow = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -382,12 +386,12 @@ public class DrawActivity extends Activity implements SensorEventListener {
                     sb.append(values[1]);
                     sb.append("Z方向的加速度：");
                     sb.append(values[2]);
-                    if(values[0] > 30 || values[0] <= -20){
+                    if(values[0] > 30 || values[0] <= -20 && isShow){
                         //视为左右
                         showLf();
 //                        Toast.makeText(DrawActivity.this,"左右",Toast.LENGTH_SHORT).show();
 //                        System.out.println(sb.toString());
-                    } else if (values[1] > 30 || values[1] <= -20 || values[1] > 30 || values[1] <= -20){
+                    } else if (values[1] > 30 || values[1] <= -20 || values[1] > 30 || values[1] <= -20 && isShow){
                         showBf();
 //                        Toast.makeText(DrawActivity.this,"前后",Toast.LENGTH_SHORT).show();
 //                        System.out.println(sb.toString());
@@ -472,16 +476,24 @@ public class DrawActivity extends Activity implements SensorEventListener {
 
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isShow = true;
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
+        isShow = false;
         if(soundPool != null){
             soundPool.stop(cqId);
             soundPool.stop(djId);
         }
-        if(vibrator != null){
-            vibrator.cancel();
-        }
+//        if(vibrator != null){
+//            vibrator.cancel();
+//        }
     }
 
     @Override
