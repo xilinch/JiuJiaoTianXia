@@ -95,6 +95,7 @@
             android:id="@+id/ll_guid"
             android:orientation="vertical"
             android:gravity="center"
+            android:visibility="visible"
             android:background="@color/c_88_transparent"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

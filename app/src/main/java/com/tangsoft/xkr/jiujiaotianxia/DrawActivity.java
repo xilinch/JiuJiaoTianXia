@@ -119,6 +119,11 @@ public class DrawActivity extends Activity implements SensorEventListener {
      */
     private boolean isShow = false;
 
+    /**
+     * 是否点击了再来一次按钮，分享以后需要点击再来一次按钮才能继续抽签
+     */
+    private boolean isAgian = true;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,11 +161,11 @@ public class DrawActivity extends Activity implements SensorEventListener {
         } else {
             iv1.setVisibility(View.VISIBLE);
         }
-//        try {
-//            Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().into(iv1);
-//        } catch (Exception exception){
-//            exception.printStackTrace();
-//        }
+        try {
+            Glide.with(DrawActivity.this).load("file:///android_asset/bf.gif").asBitmap().into(iv1);
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
     }
 
     /**
@@ -197,7 +202,9 @@ public class DrawActivity extends Activity implements SensorEventListener {
             @Override
             public void onClick(View v) {
                 //再来一次
-                showRandom();
+//                showRandom();
+                isAgian = true;
+                iv2.setVisibility(View.GONE);
             }
         });
         iv_share.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +218,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
                 url = url.replaceFirst("@",userId);
                 shareInfo.setSpreadUrl(url);
                 showNativeShareDialog(shareInfo);
+                isAgian = false;
             }
         });
         ll_guid.setOnClickListener(new View.OnClickListener() {
@@ -218,7 +226,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
             public void onClick(View v) {
                 ll_guid.setVisibility(View.GONE);
                 iv1.setVisibility(View.VISIBLE);
-                showRandom();
+//                showRandom();
             }
         });
     }
@@ -269,7 +277,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
                     public void run() {
                         showCQ();
                     }
-                }, 5750);
+                }, 3750);
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -301,7 +309,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
                     public void run() {
                         showCQ();
                     }
-                }, 5750);
+                }, 3750);
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -352,7 +360,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
         myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                djId = soundPool.play(1,60, 60, 0, -1, 0.6f);
+                djId = soundPool.play(1,1000, 1000, 0, -1, 0.6f);
 
             }
         }, 500);
@@ -366,7 +374,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
         if(vibrator == null){
             vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         }
-        cqId = soundPool.play(2,60, 60, 0, 0, 1);
+        cqId = soundPool.play(2,1000, 1000, 0, 0, 1);
         vibrator.vibrate(50);
     }
 
@@ -386,12 +394,12 @@ public class DrawActivity extends Activity implements SensorEventListener {
                     sb.append(values[1]);
                     sb.append("Z方向的加速度：");
                     sb.append(values[2]);
-                    if(values[0] > 30 || values[0] <= -20 && isShow){
+                    if(values[0] > 30 || values[0] <= -20 && isShow && isAgian){
                         //视为左右
                         showLf();
 //                        Toast.makeText(DrawActivity.this,"左右",Toast.LENGTH_SHORT).show();
 //                        System.out.println(sb.toString());
-                    } else if (values[1] > 30 || values[1] <= -20 || values[1] > 30 || values[1] <= -20 && isShow){
+                    } else if (values[1] > 30 || values[1] <= -20 || values[1] > 30 || values[1] <= -20 && isShow && isAgian){
                         showBf();
 //                        Toast.makeText(DrawActivity.this,"前后",Toast.LENGTH_SHORT).show();
 //                        System.out.println(sb.toString());
