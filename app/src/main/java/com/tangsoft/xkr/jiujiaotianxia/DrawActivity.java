@@ -3,6 +3,7 @@ package com.tangsoft.xkr.jiujiaotianxia;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -14,7 +15,6 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -157,16 +157,19 @@ public class DrawActivity extends Activity implements SensorEventListener {
             mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
         }
         preLoadSound();
-        if(ll_guid.getVisibility() == View.VISIBLE){
-            iv1.setVisibility(View.INVISIBLE);
+        iv1.setVisibility(View.VISIBLE);
+        SharedPreferences sp = getSharedPreferences("draw", Activity.MODE_PRIVATE);
+        String guide = sp.getString("guide","");
+        if(TextUtils.isEmpty(guide)){
+            ll_guid.setVisibility(View.VISIBLE);
         } else {
-            iv1.setVisibility(View.VISIBLE);
+            ll_guid.setVisibility(View.GONE);
         }
-        try {
-            Glide.with(DrawActivity.this.getApplicationContext()).load(R.mipmap.first).into(iv1);
-        } catch (Exception exception){
-            exception.printStackTrace();
-        }
+//        try {
+//            Glide.with(DrawActivity.this.getApplicationContext()).load(R.mipmap.first).into(iv1);
+//        } catch (Exception exception){
+//            exception.printStackTrace();
+//        }
     }
 
     /**
@@ -205,11 +208,12 @@ public class DrawActivity extends Activity implements SensorEventListener {
                 //再来一次
 //                showRandom();
                 if(isAgian){
-                    ToastUtils.showShort(DrawActivity.this,"请晃动您的手机!");
+                    ToastUtils.showShort(DrawActivity.this,"请摇晃手机抽签");
                 }
                 isAgian = true;
-                Log.e("my", "iv_agin isAgian:" + isAgian);
                 iv2.setVisibility(View.GONE);
+                iv1.setImageResource(R.mipmap.first);
+                iv_share.setClickable(false);
             }
         });
         iv_share.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +234,10 @@ public class DrawActivity extends Activity implements SensorEventListener {
             @Override
             public void onClick(View v) {
                 ll_guid.setVisibility(View.GONE);
+                SharedPreferences sp = getSharedPreferences("draw", Activity.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("guide","1");
+                editor.commit();
                 iv1.setVisibility(View.VISIBLE);
 //                showRandom();
             }
@@ -269,9 +277,10 @@ public class DrawActivity extends Activity implements SensorEventListener {
      * 显示前后
      */
     private synchronized void showBf(){
-        Log.e("my","showBf:" + isCQ + "  isAgian:" + isAgian);
+//        Log.e("my","showBf:" + isCQ + "  isAgian:" + isAgian);
         if(!isCQ && isAgian){
             isCQ = true;
+            iv_share.setClickable(false);
             iv_agin.setVisibility(View.GONE);
             iv_share.setVisibility(View.GONE);
             try {
@@ -301,9 +310,10 @@ public class DrawActivity extends Activity implements SensorEventListener {
      * 显示左右
      */
     private synchronized void showLf(){
-        Log.e("my","showLf:" + isCQ + "  isAgian:" + isAgian);
+//        Log.e("my","showLf:" + isCQ + "  isAgian:" + isAgian);
         if(!isCQ  && isAgian){
             isCQ = true;
+            iv_share.setClickable(false);
             iv2.setVisibility(View.INVISIBLE);
             iv_agin.setVisibility(View.GONE);
             iv_share.setVisibility(View.GONE);
@@ -337,7 +347,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
         iv2.setVisibility(View.VISIBLE);
         soundPool.stop(cqId);
         drawIndex = (int)Math.ceil(39 * (Math.random()));
-        Log.i("my","drawIndex:" + drawIndex);
+//        Log.i("my","drawIndex:" + drawIndex);
         Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/"+ drawIndex + ".gif").into(new GlideDrawableImageViewTarget(iv2, 1));
         myHandler.postDelayed(new Runnable() {
             @Override
@@ -352,6 +362,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
                 ll_action.setVisibility(View.VISIBLE);
                 iv_agin.setVisibility(View.VISIBLE);
                 iv_share.setVisibility(View.VISIBLE);
+                iv_share.setClickable(true);
             }
         },1000);
 
@@ -399,12 +410,12 @@ public class DrawActivity extends Activity implements SensorEventListener {
                     sb.append(values[1]);
                     sb.append("Z方向的加速度：");
                     sb.append(values[2]);
-                    if(values[0] > 30 || values[0] <= -20 && isShow){
+                    if(values[0] > 15 || values[0] <= -15 && isShow){
                         //视为左右
                         showLf();
 //                        Toast.makeText(DrawActivity.this,"左右",Toast.LENGTH_SHORT).show();
 //                        System.out.println(sb.toString());
-                    } else if (values[1] > 30 || values[1] <= -20 || values[1] > 30 || values[1] <= -20 && isShow){
+                    } else if (values[1] > 15 || values[1] <= -15 && isShow){
                         showBf();
 //                        Toast.makeText(DrawActivity.this,"前后",Toast.LENGTH_SHORT).show();
 //                        System.out.println(sb.toString());
@@ -494,11 +505,13 @@ public class DrawActivity extends Activity implements SensorEventListener {
     protected void onResume() {
         super.onResume();
         isShow = true;
+//        Log.e("my","onResume");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+//        Log.e("my","onStop");
         isShow = false;
         if(soundPool != null){
             soundPool.stop(cqId);
@@ -512,11 +525,13 @@ public class DrawActivity extends Activity implements SensorEventListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        Log.e("my","onDestroy");
         if(mSensorManager != null){
             mSensorManager.unregisterListener(this);
         }
         if(soundPool != null){
             soundPool.release();
         }
+
     }
 }

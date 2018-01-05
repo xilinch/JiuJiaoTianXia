@@ -1,16 +1,21 @@
 package com.tangsoft.xkr.jiujiaotianxia.wxapi;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
+
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
+import java.util.Iterator;
 
 /**
  *
@@ -21,54 +26,83 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     private static final int RETURN_MSG_TYPE_SHARE = 2;
     private String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
     private IWXAPI mWxAPI;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mWxAPI = WXAPIFactory.createWXAPI(this, WXPayEntryActivity.WX_APPID);
-        mWxAPI.handleIntent(getIntent(),this);
+//        Log.d("my", "WXEntryActivity onCreate ------- "+getIntent().getExtras());
+        Bundle bundleExtras = getIntent().getExtras();
+        if(bundleExtras != null){
+            Iterator iterator = bundleExtras.keySet().iterator();
+            while (iterator.hasNext()){
+                String key = iterator.next().toString();
+//                Log.i("my", "iterator key: ." + key+ "  value:" + bundleExtras.getString(key));
+            }
+            if(null == bundleExtras.getString("_wxapi_baseresp_errcode")
+                    && null == bundleExtras.getString("_wxapi_baseresp_errstr")){
+                finish();
+                return;
+            }
+        }
+
+        mWxAPI = WXAPIFactory.createWXAPI(this, WXPayEntryActivity.WX_APPID,false);
+        mWxAPI.handleIntent(getIntent(), this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+//        Log.d("my", "WXEntryActivity onCreate ------- "+getIntent().getExtras());
+        mWxAPI.handleIntent(intent,this);
     }
 
     @Override
     public void onReq(BaseReq baseReq) {
-
+//        Log.e("my", "onReq:" + baseReq.openId);
+        finish();
     }
 
     @Override
     public void onResp(BaseResp baseResp) {
-        Log.i("my",baseResp.errStr);
-        Log.i("my","9错误码 : " + baseResp.errCode + "");
-        switch (baseResp.errCode) {
-            case BaseResp.ErrCode.ERR_AUTH_DENIED:
-            case BaseResp.ErrCode.ERR_USER_CANCEL:
-                if (RETURN_MSG_TYPE_SHARE == baseResp.getType()) {
-                    Toast.makeText(WXEntryActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                else {
-                    Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
-            case BaseResp.ErrCode.ERR_OK:
-                switch (baseResp.getType()) {
-                    case RETURN_MSG_TYPE_LOGIN:
-                        //拿到了微信返回的code,再去请求access_token
-                        String code = ((SendAuth.Resp) baseResp).code;
-                        Log.i("my","code = " + code);
+        Log.e("my", baseResp.errStr);
+        Log.e("my", "9错误码 : " + baseResp.errCode + "");
+        if (baseResp.getType() == 1) {
+            switch (baseResp.errCode) {
+
+                case BaseResp.ErrCode.ERR_AUTH_DENIED:
+                case BaseResp.ErrCode.ERR_USER_CANCEL:
+                    if (RETURN_MSG_TYPE_SHARE == baseResp.getType()) {
+                        Toast.makeText(WXEntryActivity.this, "分享失败", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                    break;
+                case BaseResp.ErrCode.ERR_OK:
+                    switch (baseResp.getType()) {
+                        case RETURN_MSG_TYPE_LOGIN:
+                            //拿到了微信返回的code,再去请求access_token
+                            String code = ((SendAuth.Resp) baseResp).code;
+                            Log.e("my", "code = " + code);
 //                        requestWXToken(code);
 //                        requestUserInfo(code);
-                        break;
+                            finish();
+                            break;
 
-                    case RETURN_MSG_TYPE_SHARE:
-                        Toast.makeText(WXEntryActivity.this, "微信分享成功", Toast.LENGTH_SHORT).show();
-                        finish();
-                        break;
-                    default:
-                        finish();
-                }
-                break;
-            default:
-                finish();
+                        case RETURN_MSG_TYPE_SHARE:
+                            Toast.makeText(WXEntryActivity.this, "微信分享成功", Toast.LENGTH_SHORT).show();
+                            finish();
+                            break;
+                    }
+                    break;
+                default:
+                    finish();
+            }
+        } else if (baseResp.getType() == 2) {
+            finish();
+        } else {
+            finish();
         }
 
     }

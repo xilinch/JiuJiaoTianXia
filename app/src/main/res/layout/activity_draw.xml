@@ -55,6 +55,7 @@
         <ImageView
             android:id="@+id/iv1"
             android:scaleType="fitXY"
+            android:src="@mipmap/first"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center" />

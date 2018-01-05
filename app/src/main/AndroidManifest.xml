@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.BODY_SENSORS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -36,15 +36,21 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden|navigation">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DrawActivity"></activity>
+        <activity
+            android:name=".DrawActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".StartupActivity"></activity>
 
 
@@ -80,6 +86,7 @@
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".wxapi.WXPayEntryActivity"
@@ -97,8 +104,14 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name=".WelcomeActivity" android:screenOrientation="portrait" android:configChanges="orientation|keyboardHidden|navigation"/>
-        <activity android:name=".WebViewActivity" android:configChanges="orientation|keyboardHidden|navigation"/>
+        <activity
+            android:name=".WelcomeActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".WebViewActivity"
+            android:configChanges="orientation|keyboardHidden|navigation" />
+
         <service android:name=".service.UpgradeIntentService" />
         <service android:name=".service.UpgradeSilenceIntentService" />
     </application>
