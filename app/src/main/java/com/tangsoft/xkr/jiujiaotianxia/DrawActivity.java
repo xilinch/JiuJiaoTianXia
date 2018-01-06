@@ -285,7 +285,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
             iv_agin.setVisibility(View.GONE);
             iv_share.setVisibility(View.GONE);
             try {
-                Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/bf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
+                Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/bf1.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
                 iv2.setVisibility(View.INVISIBLE);
                 myHandler.postDelayed(new Runnable() {
                     @Override
@@ -319,7 +319,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
             iv_agin.setVisibility(View.GONE);
             iv_share.setVisibility(View.GONE);
             try {
-                Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/lf.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
+                Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/lf1.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(iv1, 1));
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
