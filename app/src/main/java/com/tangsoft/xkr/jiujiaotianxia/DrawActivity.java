@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -223,7 +224,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
                 shareInfo.setImgUrl("http://wx.xtyxmall.com/static/jjtx/share_logo.png");
                 shareInfo.setTitle(DrawContent.share_title);
                 shareInfo.setSpreadContent(DrawContent.content[drawIndex - 1]);
-                String url = DrawContent.share_url.replaceFirst("@",drawIndex + "");
+                String url = DrawContent.share_url.replaceFirst("@",drawIndex - 1 + "");
                 url = url.replaceFirst("@",userId);
                 shareInfo.setSpreadUrl(url);
                 showNativeShareDialog(shareInfo);
@@ -347,7 +348,7 @@ public class DrawActivity extends Activity implements SensorEventListener {
         iv2.setVisibility(View.VISIBLE);
         soundPool.stop(cqId);
         drawIndex = (int)Math.ceil(39 * (Math.random()));
-//        Log.i("my","drawIndex:" + drawIndex);
+        Log.i("my","drawIndex:" + drawIndex);
         Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/"+ drawIndex + ".gif").into(new GlideDrawableImageViewTarget(iv2, 1));
         myHandler.postDelayed(new Runnable() {
             @Override
