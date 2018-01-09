@@ -38,7 +38,7 @@ public class UtilCheckUpgrade {
         params.addBodyParameter("osversion",UtilSystem.getOSVersion());
         params.addBodyParameter("manufactor", UtilApp.getManufactor());
         params.addBodyParameter("channel",UtilApp.getChanel(activity));
-        params.addBodyParameter("versioncode ", UtilSystem.getVersionCode(activity) + "");
+        params.addBodyParameter("versioncode", UtilSystem.getVersionCode(activity) + "");
         String url = "http://api.xtyxmall.com/index.php/AppVersion/jjtx";
         httpUtils.send(HttpRequest.HttpMethod.POST, url, params, new RequestCallBack<String>() {
             @Override
