@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.tangsoft.xkr.jiujiaotianxia.base.BaseActivity;
 import com.tangsoft.xkr.jiujiaotianxia.config.DrawContent;
 import com.tangsoft.xkr.jiujiaotianxia.dialog.ShareDialog;
 import com.tangsoft.xkr.jiujiaotianxia.model.ShareInfo;
@@ -33,7 +34,7 @@ import com.tangsoft.xkr.jiujiaotianxia.util.ToastUtils;
  * Created by xilinch on 17-12-16.
  */
 
-public class DrawActivity extends Activity implements SensorEventListener {
+public class DrawActivity extends BaseActivity implements SensorEventListener {
 
     /**
      * 标题

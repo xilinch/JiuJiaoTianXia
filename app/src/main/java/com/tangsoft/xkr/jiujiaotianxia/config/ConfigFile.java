@@ -44,5 +44,8 @@ public class ConfigFile {
      * sp文件名
      */
     public static String SP_FILE = APP_ROOT + "_sp";
-
+    /**
+     * 友盟线上key
+     */
+    public static final String UMENG_KEY = "5a9a29508f4a9d32fe00026b";
 }

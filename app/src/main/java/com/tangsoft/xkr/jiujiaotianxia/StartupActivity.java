@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.tangsoft.xkr.jiujiaotianxia.base.BaseAppCompatActivity;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -22,7 +24,7 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017-05-09.
  */
 
-public class StartupActivity extends AppCompatActivity {
+public class StartupActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.viewPager)
     ViewPager viewPager;

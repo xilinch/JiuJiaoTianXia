@@ -5,13 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
+
+import com.tangsoft.xkr.jiujiaotianxia.base.BaseAppCompatActivity;
+
 
 /**
  * Created by Administrator on 2017-05-09.
  */
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends BaseAppCompatActivity {
 
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.lidroid.xutils.util.LogUtils;
 import com.tangsoft.xkr.jiujiaotianxia.api.ApiConfig;
+import com.tangsoft.xkr.jiujiaotianxia.base.BaseAppCompatActivity;
 import com.tangsoft.xkr.jiujiaotianxia.dialog.ShareDialog;
 import com.tangsoft.xkr.jiujiaotianxia.fragment.PayOrderDetailFragment;
 import com.tangsoft.xkr.jiujiaotianxia.model.ShareInfo;
@@ -32,7 +33,7 @@ import java.util.TimerTask;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.webView)
     WebView webView;

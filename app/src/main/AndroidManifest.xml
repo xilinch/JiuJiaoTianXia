@@ -114,6 +114,9 @@
 
         <service android:name=".service.UpgradeIntentService" />
         <service android:name=".service.UpgradeSilenceIntentService" />
+
+        <meta-data android:value="5a9a29508f4a9d32fe00026b" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="default" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>
