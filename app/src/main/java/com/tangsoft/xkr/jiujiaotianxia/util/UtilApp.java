@@ -23,7 +23,7 @@ public class UtilApp {
     }
 
     public static String getChanel(Context ctx){
-        String channel = getAppMetaData(ctx, "umeng");
+        String channel = getAppMetaData(ctx, "UMENG_CHANNEL");
         return channel;
     }
 
