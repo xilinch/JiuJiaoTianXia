@@ -293,13 +293,13 @@ public class DrawActivity extends BaseActivity implements SensorEventListener {
                     public void run() {
                         showCQ();
                     }
-                }, 3750);
+                }, 3250);
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         soundPool.stop(djId);
                     }
-                },2500);
+                },1500);
                 playSoundDJ();
             } catch (Exception e){
                 e.printStackTrace();
@@ -326,13 +326,13 @@ public class DrawActivity extends BaseActivity implements SensorEventListener {
                     public void run() {
                         showCQ();
                     }
-                }, 3750);
+                }, 3250);
                 myHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         soundPool.stop(djId);
                     }
-                },2500);
+                },1500);
             } catch (Exception excaption){
                 excaption.printStackTrace();
             }
@@ -347,7 +347,6 @@ public class DrawActivity extends BaseActivity implements SensorEventListener {
      */
     private synchronized void showCQ(){
         iv2.setVisibility(View.VISIBLE);
-        soundPool.stop(cqId);
         drawIndex = (int)Math.ceil(39 * (Math.random()));
         Log.i("my","drawIndex:" + drawIndex);
         Glide.with(DrawActivity.this.getApplicationContext()).load("file:///android_asset/"+ drawIndex + ".gif").into(new GlideDrawableImageViewTarget(iv2, 1));
@@ -378,7 +377,7 @@ public class DrawActivity extends BaseActivity implements SensorEventListener {
         myHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                djId = soundPool.play(1,0.5f, 0.5f, 0, -1, 0.6f);
+                djId = soundPool.play(1,0.5f, 0.5f, 0, -1, 1f);
 
             }
         }, 500);
