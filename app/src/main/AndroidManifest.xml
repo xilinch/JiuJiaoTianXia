@@ -37,7 +37,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -105,7 +105,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:screenOrientation="portrait" />
         <activity
